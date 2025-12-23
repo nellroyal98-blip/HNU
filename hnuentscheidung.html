@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Decision Tree – Promotions- und Lebensentscheidung</title>
+
+<style>
+body {
+    background: #12091b;
+    color: #f3eaff;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    max-width: 950px;
+    margin: 30px auto;
+}
+
+h1 {
+    text-align: center;
+    color: #e6ccff;
+}
+
+.node {
+    background: #251235;
+    border: 2px solid #7c3aed;
+    border-radius: 12px;
+    padding: 22px;
+    margin: 25px 0;
+}
+
+.buttons {
+    margin-top: 18px;
+}
+
+button {
+    background: #7c3aed;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    margin: 6px 10px 6px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+button:hover {
+    background: #9f67ff;
+}
+
+.hidden {
+    display: none;
+}
+
+.branch {
+    margin-left: 40px;
+    margin-top: 20px;
+    border-left: 3px dashed #6d3ca8;
+    padding-left: 25px;
+}
+
+.pro {
+    color: #9affc7;
+    margin-bottom: 6px;
+}
+
+.con {
+    color: #ff9aa2;
+    margin-bottom: 6px;
+}
+
+.context {
+    color: #d6c8ff;
+    font-size: 14px;
+    margin-top: 8px;
+}
+</style>
+
+<script>
+function choose(group, id) {
+    document.querySelectorAll(`[data-group="${group}"]`)
+        .forEach(el => el.classList.add("hidden"));
+    document.getElementById(id).classList.remove("hidden");
+}
+
+function chooseRoot(id) {
+    // alles schließen
+    document.querySelectorAll('.branch').forEach(el => el.classList.add("hidden"));
+
+    // Root-Entscheidung anzeigen
+    document.querySelectorAll('[data-group="root"]').forEach(el => el.classList.add("hidden"));
+    document.getElementById(id).classList.remove("hidden");
+}
+</script>
+
+<script>
+function checkCode() {
+    const value = document.getElementById("codeInput").value;
+    const message = document.getElementById("gateMessage");
+
+    if (value === "666") {
+        document.getElementById("gate").classList.add("hidden");
+        document.getElementById("tree").classList.remove("hidden");
+    } else {
+        message.textContent = "heul doch";
+    }
+}
+</script>
+
+
+</head>
+
+<body>
+<div id="gate" class="container">
+    <div class="node" style="text-align:center">
+        <strong>Zugriffsschutz</strong>
+        <p class="context">Bitte gib den Zugangscode ein.</p>
+
+        <input id="codeInput" type="password" 
+               style="padding:10px;border-radius:6px;border:none;font-size:16px;width:120px;text-align:center">
+
+        <div class="buttons">
+            <button onclick="checkCode()">Bestätigen</button>
+        </div>
+
+        <p id="gateMessage" style="margin-top:15px;color:#ff9aa2;"></p>
+    </div>
+</div>
+<div id="tree" class="container hidden">
+
+
+<h1>Entscheidungsbaum – HNU & Promotion</h1>
+
+<!-- ROOT -->
+<div class="node">
+<strong>Ausgangsentscheidung</strong><br>
+Soll ich die Stelle an der Hochschule Neu-Ulm annehmen oder nicht?
+
+<div class="context">
+Diese Entscheidung beeinflusst Wohnort, finanzielle Situation, Promotionsweg und meine langfristige wissenschaftliche Ausrichtung.
+</div>
+
+<div class="buttons">
+<button onclick="chooseRoot('hnu')">Zur HNU gehen</button>
+<button onclick="chooseRoot('nohnu')">Nicht zur HNU gehen</button>
+
+</div>
+</div>
+
+<!-- PFAD A -->
+<div id="hnu" class="branch hidden" data-group="root">
+<div class="node">
+<strong>Pfad A: Stelle an der HNU annehmen</strong>
+
+<p class="pro">+ Sichere Vollzeitstelle (TV-L E13, 100 Prozent), was im Wissenschaftsbereich eher selten ist und finanzielle Stabilität bietet.</p>
+<p class="con">− Umzug über große Distanz mit hohen Kosten und langfristiger Bindung, ein späterer Ausstieg wäre deutlich erschwert.</p>
+
+<div class="context">
+Die Hochschule selbst hat kein Promotionsrecht, die Promotion müsste über eine kooperierende Universität erfolgen.
+</div>
+
+<div class="buttons">
+<button onclick="choose('living','solo')">Alleine wohnen</button>
+<button onclick="choose('living','partner')">Mit Fred wohnen</button>
+</div>
+</div>
+</div>
+
+<!-- SOLO -->
+<div id="solo" class="branch hidden" data-group="living">
+<div class="node">
+<strong>Wohnoption: Alleine, kleine Wohnung</strong>
+
+<p class="pro">+ Geringere Fixkosten und damit weniger finanzielles Risiko, falls sich die Stelle als unpassend erweist.</p>
+<p class="con">− Soziale Isolation vor Ort, hohe Pendelbelastung durch häufige Heimfahrten und zusätzliche Belastung für die Beziehung (kein Fred und der wäre sehr unglücklich mit dieser Option).</p>
+
+<div class="context">
+Diese Option wäre eher ein vorsichtiger Testlauf, aber kein echtes Ankommen.
+</div>
+
+<div class="buttons">
+<button onclick="choose('promo','wi')">Promotion in WI / Innovation</button>
+<button onclick="choose('promo','inter')">Interdisziplinäre Promotion</button>
+<button onclick="choose('promo','psy')">Primär Psychologie extern</button>
+</div>
+</div>
+</div>
+
+<!-- PARTNER -->
+<div id="partner" class="branch hidden" data-group="living">
+<div class="node">
+<strong>Wohnoption: Mit Partner, größere Wohnung</strong>
+
+<p class="pro">+ Emotionale Stabilität durch Zusammenleben, gemeinsamer Neuanfang und bessere Lebensqualität im Alltag.</p>
+<p class="con">− Sehr hohe finanzielle Bindung, wodurch ein späterer Abbruch oder Ortswechsel stark erschwert wäre.</p>
+
+<div class="context">
+Diese Option bedeutet ein klares Bekenntnis zur Stelle und zum Standort.
+</div>
+
+<div class="buttons">
+<button onclick="choose('promo','wi')">Promotion in WI / Innovation</button>
+<button onclick="choose('promo','inter')">Interdisziplinäre Promotion</button>
+<button onclick="choose('promo','psy')">Primär Psychologie extern</button>
+</div>
+</div>
+</div>
+
+<!-- PROMO OPTIONS -->
+<div id="wi" class="branch hidden" data-group="promo">
+<div class="node">
+<strong>Promotion in Wirtschaftsinformatik / Innovation</strong>
+
+<p class="pro">+ Organisatorisch der stabilste und wahrscheinlichste Weg zu einer erfolgreichen Promotion.</p>
+<p class="con">− Klare Entfernung von der Psychologie, spätere Rückkehr in sozialpsychologische Forschung deutlich erschwert.</p>
+
+<div class="context">
+In der Wissenschaft zählt das Promotionsfach stark für spätere Stellen.
+</div>
+</div>
+</div>
+
+<div id="inter" class="branch hidden" data-group="promo">
+<div class="node">
+<strong>Interdisziplinäre Promotion</strong>
+
+<p class="pro">+ Psychologische Inhalte bleiben sichtbar und anschlussfähig an bisherige Interessen.</p>
+<p class="con">− Höherer organisatorischer Aufwand und weniger institutionelle Sicherheit.</p>
+
+<div class="context">
+Formal zählt dennoch das Fach der promotionsverleihenden Universität.
+</div>
+</div>
+</div>
+
+<div id="psy" class="branch hidden" data-group="promo">
+<div class="node">
+<strong>Primär psychologische Promotion (extern)</strong>
+
+<p class="pro">+ Maximale Nähe zu meinem eigentlichen wissenschaftlichen Ziel.</p>
+<p class="con">− Sehr schwer umzusetzen, hohe Abhängigkeit von einzelnen Betreuenden die ich erstmal noch finden muss, und erhöhtes Risiko des Scheiterns.</p>
+
+<div class="context">
+Diese Option wäre fachlich ideal, aber strukturell unsicher.
+</div>
+</div>
+</div>
+
+<!-- PFAD B -->
+<div id="nohnu" class="branch hidden" data-group="root">
+<div class="node">
+<strong>Pfad B: Stelle an der HNU ablehnen</strong>
+
+<p class="pro">+ Keine frühe fachliche Festlegung, Offenheit für passendere Wege.</p>
+<p class="con">− Kurzfristige Unsicherheit und keine feste Perspektive.</p>
+
+<div class="buttons">
+<button onclick="choose('alt','apply')">TU / weiter bewerben</button>
+<button onclick="choose('alt','job')">Provisorischer Job</button>
+<button onclick="choose('alt','alg')">ALG I + Bewerbungen</button>
+</div>
+</div>
+</div>
+
+<div id="apply" class="branch hidden" data-group="alt">
+<div class="node">
+<strong>Zur TU zurück / weiter bewerben</strong>
+
+<p class="pro">+ Fachlich näher an Psychologie, vertrautes Umfeld und bestehende Netzwerke.</p>
+<p class="con">− Emotionale Hürde, da der Weggang bereits angekündigt wurde, und keine Garantie auf eine neue Stelle.</p>
+</div>
+</div>
+
+<div id="job" class="branch hidden" data-group="alt">
+<div class="node">
+<strong>Provisorischer Job außerhalb der Forschung</strong>
+
+<p class="pro">+ Finanzielle Sicherheit und kurzfristige Entlastung.</p>
+<p class="con">− Entfernung von Forschung, erschwerter Wiedereinstieg in die Wissenschaft.</p>
+</div>
+</div>
+
+<div id="alg" class="branch hidden" data-group="alt">
+<div class="node">
+<strong>ALG I und gezielt weiter bewerben</strong>
+
+<p class="pro">+ Zeit zum Nachdenken ohne fachliche Fehlbindung.</p>
+<p class="con">− Psychisch belastend und sozialer/finanzieller Druck (aber finanziell auch machbar für paar Monate).</p>
+</div>
+</div>
+
+</div>
+</body>
+</html>
